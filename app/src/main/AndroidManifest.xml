@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.nkkumawat.mycodeforces">
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,7 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".SingleContest" />
-        <activity android:name=".SingleProblem"></activity>
+        <activity android:name=".SingleProblem" />
+        <service
+            android:name=".Service.NotificationService"
+            android:exported="false" />
     </application>
 
 </manifest>

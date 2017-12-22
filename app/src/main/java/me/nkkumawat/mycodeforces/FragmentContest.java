@@ -3,7 +3,9 @@ package me.nkkumawat.mycodeforces;
 import android.annotation.SuppressLint;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -33,7 +35,7 @@ public class FragmentContest extends Fragment {
     private JSONArray myResponse;
     ArrayList<ContestData> contestData ;
     private String InstanceId;
-
+    SharedPreferences sharedpreferences;
     public FragmentContest() {
     }
 
@@ -56,6 +58,8 @@ public class FragmentContest extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         setAdapter(myResponse);
         contestList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -67,8 +71,7 @@ public class FragmentContest extends Fragment {
                     intent.putExtra("name", contest.NameOfContest);
                     startActivity(intent);
                 }else {
-				Snackbar.make(view,"CONTEST IS NOT STARTED" , Snackbar.LENGTH_LONG)
-						.setAction("No action", null).show();
+				Snackbar.make(view,"CONTEST IS NOT STARTED" , Snackbar.LENGTH_LONG).setAction("No action", null).show();
                 }
             }
         });
@@ -76,6 +79,11 @@ public class FragmentContest extends Fragment {
     public void  setAdapter(JSONArray jArray){
         contestData = new ArrayList<>();
         try {
+
+            @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("contestDetails", jArray.toString());
+            editor.putString("status", "1");
+            editor.apply();
             for(int i=0;i<jArray.length();i++){
                 JSONObject json_data = jArray.getJSONObject(i);
                 String name = json_data.getString("contestName").replace("\n" , "");
@@ -87,6 +95,7 @@ public class FragmentContest extends Fragment {
                 ContestData tempContest = new ContestData(name , date , code);
                 contestData.add(tempContest);
             }
+
             ContestAdapter contestAdapter = new ContestAdapter( contestData , getActivity());
             contestList.setAdapter(contestAdapter);
         }
